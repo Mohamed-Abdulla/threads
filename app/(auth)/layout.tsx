@@ -1,6 +1,8 @@
 import { Metadata } from "next";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Poppins } from "next/font/google";
+import { dark } from "@clerk/themes";
+import "../globals.css";
 
 export const metadata: Metadata = {
   title: "Threads",
@@ -15,14 +17,14 @@ const poppins = Poppins({
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <ClerkProvider
-      appearance={
-        {
-          //   baseTheme: dark,
-        }
-      }
+      appearance={{
+        baseTheme: dark,
+      }}
     >
       <html lang="en">
-        <body className={`${poppins.className} bg-dark-1`}>{children}</body>
+        <body className={`${poppins.className} bg-dark-1`}>
+          <div className="w-full flex justify-center items-center min-h-screen">{children}</div>
+        </body>
       </html>
     </ClerkProvider>
   );
