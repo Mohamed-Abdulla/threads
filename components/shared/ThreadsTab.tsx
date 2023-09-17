@@ -2,6 +2,7 @@ import { fetchUserPosts } from "@/lib/actions/user.actions";
 import { redirect } from "next/navigation";
 import { FC } from "react";
 import ThreadCard from "../cards/ThreadCard";
+import { fetchCommunityPosts } from "@/lib/actions/community.actions";
 
 interface ThreadsTabProps {
   currentUserId: string;
@@ -37,14 +38,11 @@ interface Result {
 
 const ThreadsTab: FC<ThreadsTabProps> = async ({ accountId, accountType, currentUserId }) => {
   //fetch profile threads
-  let result: Result = await fetchUserPosts(accountId);
-  // if (accountType === "Community") {
-  //   // result = await fetchCommunityPosts(accountId);
-  // } else {
-  //   result =
-  // }
-  if (!result) {
-    redirect("/");
+  let result: Result;
+  if (accountType === "Community") {
+    result = await fetchCommunityPosts(accountId);
+  } else {
+    result = await fetchUserPosts(accountId);
   }
 
   return (
@@ -56,7 +54,6 @@ const ThreadsTab: FC<ThreadsTabProps> = async ({ accountId, accountType, current
           currentUserId={currentUserId}
           parentId={thread.parentId}
           content={thread.text}
-          community={thread.community}
           author={
             accountType === "User"
               ? { name: result.name, image: result.image, id: result.id }
@@ -66,11 +63,9 @@ const ThreadsTab: FC<ThreadsTabProps> = async ({ accountId, accountType, current
                   id: thread.author.id,
                 }
           }
-          // community={
-          //   accountType === "Community"
-          //     ? { name: result.name, id: result.id, image: result.image }
-          //     : thread.community
-          // }
+          community={
+            accountType === "Community" ? { name: result.name, id: result.id, image: result.image } : thread.community
+          }
           createdAt={thread.createdAt}
           comments={thread.children}
         />
